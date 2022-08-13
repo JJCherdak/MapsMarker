@@ -2,11 +2,9 @@ package com.geekbrains.mapsmarker
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,38 +13,45 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.geekbrains.mapsmarker.databinding.ActivityMapsBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+
 
 class MapsMarkersActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
 
-    // The entry point to the Places API.
+    private var mVladivostok: Marker? = null
+    private var mOMSK: Marker? = null
+    private var mMoscow: Marker? = null
+    private var mStPetersburg: Marker? = null
+    private var mKrasnodar: Marker? = null
+    private var mVolgograd: Marker? = null
+
+
+    private val MOSCOW = LatLng(55.75, 37.62)
+    private val KRASNODAR = LatLng(45.04, 38.98)
+    private val VOLGOGRAD = LatLng(48.74, 44.5)
+    private val OMSK = LatLng(54.99, 73.37)
+    private val StPetersburg = LatLng(59.94, 30.31)
+    private val VLADIVOSTOK = LatLng(43.11, 131.87)
+
+
     private lateinit var placesClient: PlacesClient
-
-    // The entry point to the Fused Location Provider.
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
     private val defaultLocation = LatLng(-33.8523341, 151.2106085)
     private var locationPermissionGranted = false
 
@@ -143,6 +148,8 @@ class MapsMarkersActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
 
+        addMarkersToMap()
+
         // Prompt the user for permission.
         getLocationPermission()
 
@@ -151,6 +158,52 @@ class MapsMarkersActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
+
+        val sydney = LatLng(-33.852, 151.211)
+        map.addMarker(
+            MarkerOptions()
+                .position(sydney)
+                .title("Marker in Sydney")
+        )
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
+    private fun addMarkersToMap() {
+        // Uses a colored icon.
+        mMoscow = map?.addMarker(MarkerOptions()
+            .position(MOSCOW)
+            .title("MOSCOW")
+            .snippet("Population: 12 635 466")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+
+        mOMSK = map?.addMarker(MarkerOptions()
+            .position(OMSK)
+            .title("ОМСК")
+            .snippet("Population: 1,126,300")
+            .infoWindowAnchor(0.5f, 0.5f))
+
+        mKrasnodar = map?.addMarker(MarkerOptions()
+            .position(KRASNODAR)
+            .title("КРАСНОДАР")
+            .snippet("Population: 1,137,000")
+            .draggable(true))
+
+        mVolgograd = map?.addMarker(MarkerOptions()
+            .position(VOLGOGRAD)
+            .title("ВОЛГОГРАД")
+            .snippet("Population: 1,001,000")
+            .draggable(true))
+
+        mVladivostok = map?.addMarker(MarkerOptions()
+            .position(VLADIVOSTOK)
+            .title("ВЛАДИВОСТОК")
+            .snippet("Population: 601 000"))
+
+        mStPetersburg = map?.addMarker(MarkerOptions()
+            .position(StPetersburg)
+            .title("САНКТ-ПЕТЕРБУРГ")
+            .snippet("Population: 5,378,000"))
+
     }
 
     /**
@@ -210,9 +263,11 @@ class MapsMarkersActivity : AppCompatActivity(), OnMapReadyCallback {
     /**
      * Handles the result of the request for location permissions.
      */
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
         locationPermissionGranted = false
         when (requestCode) {
             PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
