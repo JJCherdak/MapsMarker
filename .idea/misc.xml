@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/drawable/ic_map_marker.xml" value="0.1125" />
+        <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/drawable/ic_map_pin.xml" value="0.1125" />
         <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/layout/activity_maps.xml" value="0.2421875" />
+        <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/layout/custom_info_contents.xml" value="0.228125" />
+        <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/layout/main_fragment.xml" value="0.10104166666666667" />
+        <entry key="..\:/x-files/programming/MapsMarker/app/src/main/res/menu/current_place_menu.xml" value="0.228125" />
       </map>
     </option>
   </component>
